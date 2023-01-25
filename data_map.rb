@@ -3,7 +3,7 @@ require 'csv'
 require "fileutils"
 
 class DataMap
-  def self.call(limit, offset)
+  def self.call(index = 0, limit = 1, offset = 0)
 
   @host = String('localhost'),
   @source_db_name = String('atom'),
@@ -11,10 +11,10 @@ class DataMap
   @source_db_password = String('password'),
   @port = String('5432')
   @subcriber_table_name = String('dictionaries')
-  @file_path = String('/Users/arif/development/atom/CSV_DIRECTORIES/')
+  @file_path = String('/Users/arif/development/atom_data_map/CSV_DIRECTORIES/')
 
   connection = PG::Connection.new(:host => 'localhost', :user => @source_db_user, :dbname => @source_db_name, :port => @port, :password => @source_db_password)
-  puts "Successfully created connection to #{@host}:#{@source_db_name} database"
+  puts "Successfully created connection to #{@host} : #{@source_db_name} database"
 
   files = Dir["#{@file_path}/*"]
 
@@ -49,4 +49,4 @@ class DataMap
   end
 end
 
-DataMap.call(1, 1)
+DataMap.call
