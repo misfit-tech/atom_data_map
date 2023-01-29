@@ -1,3 +1,3 @@
 require 'daemons'
 
-Daemons.run('multi_thread.rb', log_output: true)
+Daemons.run('run_customer_data.rb', log_output: true)
