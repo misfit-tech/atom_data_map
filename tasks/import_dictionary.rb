@@ -1,16 +1,13 @@
 require 'pg'
 require 'csv'
 require "fileutils"
-require_relative 'helpers/constants'
-require_relative 'helpers/db_connection'
+require_relative '../helpers/db_connection'
 
 class ImportDictionary
   def self.call
     connection = db_connect
-    file_names = [START_FILE,END_FILE].map{|index| "#{FILE_PREFIX}#{index.to_s.rjust(FILE_NAME_ZERO_PADDING, "0")}.#{FILE_EXTENSION}"}
 
-    file_names.each do |file|
-      CSV.foreach("#{FILE_PATH}#{file}", headers: true) do |row|
+      CSV.foreach("#{File.dirname(__FILE__)}/../csv_directories/dictionary_1.csv", headers: true) do |row|
         data = row.to_h
 
         connection.exec("INSERT INTO dictionaries (english, burmese)
@@ -21,7 +18,6 @@ class ImportDictionary
         puts "#{ex.full_message}"
         next
       end
-    end
     connection.close if connection
     puts "Closing database connection for the database : #{@source_db_name}"
   end
