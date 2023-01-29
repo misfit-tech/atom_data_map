@@ -8,7 +8,7 @@ begin
   threads = Array.new
 
   while file_index <= END_FILE do
-    threads[thread_index] << file_index
+    thread_files[thread_index] << file_index
     file_index += 1
     thread_index += 1
     thread_index = thread_index % NUMBER_OF_THREADS
@@ -16,7 +16,7 @@ begin
 
   puts thread_files.inspect
   thread_files.each do |file_numbers|
-    files_paths = file_numbers.map{|number| "#{FILE_PREFIX}#{number.to_s.rjust(FILE_NAME_ZERO_PADDING, "0")}.#{FILE_EXTENSION}"}
+    files_paths = file_numbers.map{|number| "#{FILE_PATH}#{FILE_PREFIX}#{number.to_s.rjust(FILE_NAME_ZERO_PADDING, "0")}.#{FILE_EXTENSION}"}
     threads << Thread.new do
       ImportCustomers.call(files_paths)
       sleep(300)
