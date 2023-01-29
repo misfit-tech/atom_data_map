@@ -1,7 +1,7 @@
 require 'pg'
 require 'csv'
 require "fileutils"
-require_relative 'helpers/db_connection'
+require_relative '../helpers/db_connection'
 
 class ImportCustomers
   def self.call(files_paths)
