@@ -77,14 +77,14 @@ class Methods
     end
   end
 
-  def passport?(id_number)
+  def self.passport?(id_number)
     !/^(?!^0+$)[a-zA-Z]+[a-zA-Z0-9]{3,20}$/.match(id_number).nil? && !/\d/.match(id_number).nil?
   end
 
   def myanmar_passport?(id_number)
     !/^(?!^0+$)(M)[a-zA-Z0-9]{3,20}$/.match(id_number).nil? && !/\d/.match(id_number).nil?
   end
-  def old_nrc?(id_number)
+  def self.old_nrc?(id_number)
     !/^[A-Z\/.-]{3,9}[0-9]{5,6}$/.match(id_number).nil?
   end
 

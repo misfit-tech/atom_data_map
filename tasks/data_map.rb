@@ -1,16 +1,16 @@
+require 'pg'
 require_relative "../helpers/db_connection"
 require_relative '../helpers/methods'
 require_relative '../helpers/process_csv'
 require_relative '../helpers/constants'
 
 class DataMap
-  def self.call(index, limit, offset)
+  def self.call(index, limit, offset, connection)
     # source DB connection
     Methods.print_db('data_map.rb', "Trying to open database connection for Batch#{index}")
 
-    connection = db_connect
     resultSet = connection.exec("SELECT * FROM customer_data
-                                order by customer_data.id desc limit #{limit} offset #{offset};")
+                                order by customer_data.sr_num desc limit #{limit} offset #{offset};")
 
     return nil if resultSet.nil? || resultSet.count.zero?
     connection.close if connection
@@ -28,7 +28,7 @@ class DataMap
     passports = []
     missing_words = []
 
-    resultSet.each do |row|
+    resultSet.each_with_index(1) do |row, serial_no|
       data = {}
       processed_nrc = Methods.process_nrc(row['nrc'])
 
@@ -44,7 +44,7 @@ class DataMap
         next
       end
 
-      data['စဉ်'] = row['sr_num']
+      data['စဉ်'] = serial_no
       data['တိုင်း/ပြည်နယ်Code'] = REGION_CODE[processed_nrc[:region_code]]
       data['မြို့နယ်Code'] = TOWN_SHIP_CODE[processed_nrc[:town_ship_code]]
       data['အမျိုးအစား'] = CITIZENSHIP_TYPE[processed_nrc[:citizenship_type]]
@@ -67,15 +67,12 @@ class DataMap
 
   rescue PG::Error => e
     Methods.print_error('data_map.rb.rb', "Database error due to: #{e.full_message}")
-  ensure
-    connection.close if connection
-    Methods.print_log('data_map.rb.rb', "Both Database connection closed")
   end
 
   def self.translate_to_burmese(name, missing_words)
     return '' if name.nil?
 
-    splited_words = name.split(',')[0].strip.split(' ')
+    splited_words = name.strip.split(' ')
     name_array = splited_words.reject(&:empty?)
     result_array = name_array.map do |name_part|
       result = connection.exec("SELECT *
