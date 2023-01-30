@@ -13,7 +13,6 @@ class DataMap
                                 order by customer_data.sr_num desc limit #{limit} offset #{offset};")
 
     return nil if resultSet.nil? || resultSet.count.zero?
-    connection.close if connection
 
     Methods.print_db('data_map.rb.rb', "Closing database connection for Batch#{index}")
     Methods.print_log('data_map.rb.rb', "Start processing batch: #{index}, size: #{resultSet.count}")
