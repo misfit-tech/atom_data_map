@@ -7,7 +7,7 @@ class ImportDictionary
   def self.call
     connection = db_connect
 
-      CSV.foreach("#{File.dirname(__FILE__)}/../csv_directories/dictionary_2.csv", headers: true) do |row|
+      CSV.foreach("#{File.dirname(__FILE__)}/../csv_directories/dictionary_1.csv", headers: true) do |row|
         data = row.to_h
         result = connection.exec("SELECT * FROM dictionaries WHERE dictionaries.english = '#{data['english']}' limit 1;")
 

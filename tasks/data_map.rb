@@ -48,7 +48,7 @@ class DataMap
       data['မှတ်ပုံတင်အမှတ်'] = Methods.number_map(processed_nrc[:nrc_number])
       data['ကျား/မ'] = Methods.gender_prefix(row['name'])
       data['အမည်'] = translate_to_burmese(Methods.remove_prefix_from_name(row['name']), missing_words, connection)
-      data['ဖုန်းနံပါတ်(၁)'] = row['msisdn']
+      data['ဖုန်းနံပါတ်(၁)'] = row['msisdn'][0] == 9 ? row['msisdn']&.to_s&.delete_prefix!("9") : row['msisdn']
       data['ဖုန်းနံပါတ်(၂)'] = ''
 
       translation_data << [data['စဉ်'],data['တိုင်း/ပြည်နယ်Code'],data['မြို့နယ်Code'],data['အမျိုးအစား'],data['မှတ်ပုံတင်အမှတ်'],data['ကျား/မ'],data['အမည်'],data['ဖုန်းနံပါတ်(၁)'],data['ဖုန်းနံပါတ်(၂)']]
@@ -56,9 +56,9 @@ class DataMap
 
       Methods.print_summary('data_map.rb.rb', "BATCH##{page_offset}", resultSet.count)
 
-      ProcessCsv.create("non_nrc/Batch#{page_offset}.xlsx", old_nrc_headers, old_nrc)
-      ProcessCsv.create("nrc/Batch#{page_offset}.xlsx", translation_data_headers, translation_data)
-      ProcessCsv.create("missing_words/Batch#{page_offset}.xlsx", missing_words_headers, missing_words)
+      ProcessCsv.create("non_nrc/Batch#{(page_offset/PER_PAGE).to_i}.xlsx", old_nrc_headers, old_nrc)
+      ProcessCsv.create("nrc/Batch#{(page_offset/PER_PAGE).to_i}.xlsx", translation_data_headers, translation_data)
+      ProcessCsv.create("missing_words/Batch#{(page_offset/PER_PAGE).to_i}.xlsx", missing_words_headers, missing_words)
 
     end
     connection.close if connection

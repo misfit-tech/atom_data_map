@@ -13,9 +13,9 @@ class ProcessCsv
 
     FileUtils::mkdir_p File.dirname @file_name
 
-    Methods.print_file_length('process_csv.rb', "Data count in CSV file: #{@file_name}: #{@data.count}")
+    Methods.print_file_length('process_csv.rb', "Data count in xlsx file: #{@file_name}: #{@data.count}")
     return true if @data.count == 0
-    Methods.print_log('process_csv.rb', "Starting creating CSV file: #{@file_name}")
+    Methods.print_log('process_csv.rb', "Starting creating xlsx file: #{@file_name}")
 
     file_data = SpreadsheetArchitect.to_xlsx(headers: @headers, data: @data)
 
@@ -23,8 +23,8 @@ class ProcessCsv
       f.write file_data
     end
 
-    Methods.print_log('process_csv.rb', "CSV file: #{@file_name} created")
+    Methods.print_log('process_csv.rb', "xlsx file: #{@file_name} created")
   rescue => error
-    Methods.print_error('process_csv.rb', "Error while creating CSV file: #{@file_name} :: #{error.message}")
+    Methods.print_error('process_csv.rb', "Error while creating xlsx file: #{@file_name} :: #{error.message}")
   end
 end
