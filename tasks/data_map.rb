@@ -12,14 +12,14 @@ class DataMap
 
     page_offset = offset
     while page_offset < limit do
-      resultSet = connection.exec("SELECT * FROM customer_data
+      result_set = connection.exec("SELECT * FROM customer_data
                                 order by customer_data.sr_num limit #{PER_PAGE} offset #{page_offset};")
       page_offset += PER_PAGE
 
 
-    return nil if resultSet.nil? || resultSet.count.zero?
+    return nil if result_set.nil? || result_set.count.zero?
 
-    Methods.print_log('data_map.rb.rb', "Start page processing batch: start with #{page_offset} and size #{resultSet.count}")
+    Methods.print_log('data_map.rb.rb', "Start page processing batch: start with #{page_offset} and size #{result_set.count}")
 
     translation_data_headers = %w[စဉ် တိုင်း/ပြည်နယ်Code မြို့နယ်Code အမျိုးအစား မှတ်ပုံတင်အမှတ် ကျား/မ အမည် ဖုန်းနံပါတ်(၁) ဖုန်းနံပါတ်(၂)]
     old_nrc_headers = ["nrc"]
@@ -27,10 +27,9 @@ class DataMap
 
     translation_data = []
     old_nrc = []
-    passports = []
     missing_words = []
 
-    resultSet.each_with_index do |row, serial_no|
+    result_set.each_with_index do |row, serial_no|
       data = Hash.new
       processed_nrc = Methods.process_nrc(row['nrc'])
 
@@ -48,13 +47,13 @@ class DataMap
       data['မှတ်ပုံတင်အမှတ်'] = Methods.number_map(processed_nrc[:nrc_number])
       data['ကျား/မ'] = Methods.gender_prefix(row['name'])
       data['အမည်'] = translate_to_burmese(Methods.remove_prefix_from_name(row['name']), missing_words, connection)
-      data['ဖုန်းနံပါတ်(၁)'] = row['msisdn'][0] == 9 ? row['msisdn']&.to_s&.delete_prefix!("9") : row['msisdn']
+      data['ဖုန်းနံပါတ်(၁)'] = row['msisdn'][0] == '9' ? row['msisdn']&.to_s&.delete_prefix!('9') : row['msisdn']
       data['ဖုန်းနံပါတ်(၂)'] = ''
-
+      
       translation_data << [data['စဉ်'],data['တိုင်း/ပြည်နယ်Code'],data['မြို့နယ်Code'],data['အမျိုးအစား'],data['မှတ်ပုံတင်အမှတ်'],data['ကျား/မ'],data['အမည်'],data['ဖုန်းနံပါတ်(၁)'],data['ဖုန်းနံပါတ်(၂)']]
     end
 
-      Methods.print_summary('data_map.rb.rb', "BATCH##{page_offset}", resultSet.count)
+      Methods.print_summary('data_map.rb.rb', "BATCH##{page_offset}", result_set.count)
 
       ProcessCsv.create("non_nrc/Batch#{(page_offset/PER_PAGE).to_i}.xlsx", old_nrc_headers, old_nrc)
       ProcessCsv.create("nrc/Batch#{(page_offset/PER_PAGE).to_i}.xlsx", translation_data_headers, translation_data)
