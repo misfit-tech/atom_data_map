@@ -73,13 +73,13 @@ class DataMap
     result_array = name_array.map do |name_part|
       result = connection.exec("SELECT *
                                 FROM dictionaries
-                                WHERE LOWER(dictionaries.english) = '#{sql_sanitize(name_part).downcase}'
+                                WHERE LOWER(dictionaries.english) = '#{sql_sanitize(name_part.strip).downcase}'
                                 limit 1;")
       if result.count == 0
         connection.exec("INSERT INTO missing_words (english)
-          VALUES ('#{name_part}');")
-        missing_words << [name_part]
-        name_part
+          VALUES ('#{sql_sanitize(name_part.strip)}');")
+        missing_words << [sql_sanitize(name_part.strip)]
+        sql_sanitize(name_part.strip)
       else
         result[0]['burmese']
       end

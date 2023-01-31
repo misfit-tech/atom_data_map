@@ -11,7 +11,7 @@ class ImportCustomers
       CSV.foreach(file_path, headers: true, col_sep: '|') do |row|
         data = row.to_h
 
-        result = connection.exec("SELECT * FROM customers WHERE customers.nrc = '#{data['NRC']}' limit 1;")
+        result = connection.exec("SELECT * FROM customers WHERE LOWER(customers.nrc) = '#{data['NRC'].downcase}' limit 1;")
 
         if result.count == 0
           connection.exec("INSERT INTO customers (sr_num, name, msisdn1, nrc)
