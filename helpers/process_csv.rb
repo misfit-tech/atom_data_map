@@ -1,3 +1,4 @@
+require "spreadsheet_architect"
 require 'csv'
 require "fileutils"
 require_relative 'constants'
@@ -15,14 +16,11 @@ class ProcessCsv
     Methods.print_file_length('process_csv.rb', "Data count in CSV file: #{@file_name}: #{@data.count}")
     return true if @data.count == 0
     Methods.print_log('process_csv.rb', "Starting creating CSV file: #{@file_name}")
-    CSV.open(@file_name, 'w', write_headers: true, headers: @headers) do  |writer|
-      @data.each do |data|
-        begin
-          writer << data
-        rescue => ex
-          Methods.print_error('process_csv.rb', "Error while writing data: #{data} in CSV file: #{@file_name} :: #{ex.message}")
-        end
-      end
+
+    file_data = SpreadsheetArchitect.to_xlsx(headers: @headers, data: @data)
+
+    File.open(@file_name, 'w+b') do |f|
+      f.write file_data
     end
 
     Methods.print_log('process_csv.rb', "CSV file: #{@file_name} created")

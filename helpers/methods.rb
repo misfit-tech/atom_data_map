@@ -4,16 +4,31 @@ class Methods
 
 
   def self.process_nrc(nrc)
+    splited_nrc = nrc.split('/')
+
+    return nil if splited_nrc.length < 2
+    region_code = splited_nrc[0]
+    splited_nrc = splited_nrc[1].split('(')
+
+    return nil if splited_nrc.length < 2
+    town_ship_code = splited_nrc[0].downcase
+    splited_nrc = splited_nrc[1].split(')')
+
+    return nil if splited_nrc.length < 2
+    citizenship_type = splited_nrc[0]
+    nrc_number = splited_nrc[1]
+
     {
-      region_code: (nrc.split('/')[0]),
-      town_ship_code: nrc.split('/')[1].split('(')[0].downcase,
-      citizenship_type: nrc.split('/')[1].split('(')[1].split(')')[0],
-      nrc_number: nrc.split('/')[1].split('(')[1].split(')')[1]
+      region_code: region_code,
+      town_ship_code: town_ship_code,
+      citizenship_type: citizenship_type,
+      nrc_number: nrc_number
     }
   end
 
+
   def self.number_map(english_number)
-    burmese_word = english_number.length.times.map do |number|
+    burmese_word = english_number.length&.times.map do |number|
       BURMESE_NUMBER[number]
     end
     burmese_word.join(',').gsub(/[\s,]/ ,"")
