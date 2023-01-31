@@ -40,8 +40,8 @@ class DataMap
       data['မြို့နယ်Code'] = processed_nrc.nil? ? '' : TOWN_SHIP_CODE[processed_nrc[:town_ship_code]]
       data['အမျိုးအစား'] = processed_nrc.nil? ? '' : CITIZENSHIP_TYPE[processed_nrc[:citizenship_type]]
       data['မှတ်ပုံတင်အမှတ်'] = processed_nrc.nil? ? row['nrc'] : Methods.number_map(processed_nrc[:nrc_number])
-      data['ကျား/မ'] = Methods.gender_prefix(row['name'])
-      data['အမည်'] = translate_to_burmese(Methods.remove_prefix_from_name(row['name']), missing_words, connection)
+      data['ကျား/မ'] = row['name'].nil? ? row['name'] : Methods.gender_prefix(row['name'])
+      data['အမည်'] = row['name'].nil? ? row['name'] : translate_to_burmese(Methods.remove_prefix_from_name(row['name']), missing_words, connection)
       data['ဖုန်းနံပါတ်(၁)'] = row['msisdn'][0] == '9' ? row['msisdn']&.to_s&.delete_prefix!('9') : row['msisdn']
       data['ဖုန်းနံပါတ်(၂)'] = ''
 
