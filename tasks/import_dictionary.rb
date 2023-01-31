@@ -6,8 +6,9 @@ require_relative '../helpers/db_connection'
 class ImportDictionary
   def self.call
     connection = db_connect
-
+    index = 0
       CSV.foreach("#{File.dirname(__FILE__)}/../csv_directories/dictionary_1.csv", headers: true) do |row|
+        index += 1
         data = row.to_h
         result = connection.exec("SELECT *
                                 FROM dictionaries
@@ -24,7 +25,7 @@ class ImportDictionary
           puts "english : #{sql_sanitize(data['english'])} | burmese: #{sql_sanitize(data['burmese'])} | ACTION: Update"
         end
       rescue => ex
-        puts "#{ex.full_message}"
+        puts "Index: #{index} - #{ex.full_message}"
         next
       end
     connection.close if connection

@@ -40,7 +40,7 @@ class DataMap
         next
       end
 
-      sr_no = page_offset + serial_no
+      sr_no = (page_offset-PER_PAGE) + serial_no
       data['စဉ်'] =  Methods.number_map(sr_no)
       data['တိုင်း/ပြည်နယ်Code'] = REGION_CODE[processed_nrc[:region_code]]
       data['မြို့နယ်Code'] = TOWN_SHIP_CODE[processed_nrc[:town_ship_code]]
