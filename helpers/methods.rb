@@ -28,8 +28,8 @@ class Methods
 
 
   def self.number_map(english_number)
-    burmese_word = english_number.to_s.length&.times.map do |number|
-      BURMESE_NUMBER[number]
+    burmese_word = english_number.to_s.chars.map do |number|
+      BURMESE_NUMBER[number.to_i]
     end
     burmese_word.join(',').gsub(/[\s,]/ ,"")
   end

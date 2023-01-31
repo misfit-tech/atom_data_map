@@ -8,7 +8,7 @@ class DataMap
   def self.call(offset, limit)
     connection = db_connect
     # source DB connection
-    Methods.print_db('data_map.rb', "Batch start with #{offset}-#{limit}")
+    Methods.print_db('data_map.rb', "data start with #{offset}-#{limit}")
 
     page_offset = offset
     while page_offset < limit do
@@ -19,7 +19,7 @@ class DataMap
 
     return nil if result_set.nil? || result_set.count.zero?
 
-    Methods.print_log('data_map.rb.rb', "Start page processing batch: start with #{page_offset} and size #{result_set.count}")
+    Methods.print_log('data_map.rb.rb', "Start page processing data: start with #{page_offset} and size #{result_set.count}")
 
     translation_data_headers = %w[စဉ် တိုင်း/ပြည်နယ်Code မြို့နယ်Code အမျိုးအစား မှတ်ပုံတင်အမှတ် ကျား/မ အမည် ဖုန်းနံပါတ်(၁) ဖုန်းနံပါတ်(၂)]
     old_nrc_headers = ["nrc"]
@@ -40,7 +40,8 @@ class DataMap
         next
       end
 
-      data['စဉ်'] =  Methods.number_map(page_offset + serial_no)
+      sr_no = page_offset + serial_no
+      data['စဉ်'] =  Methods.number_map(sr_no)
       data['တိုင်း/ပြည်နယ်Code'] = REGION_CODE[processed_nrc[:region_code]]
       data['မြို့နယ်Code'] = TOWN_SHIP_CODE[processed_nrc[:town_ship_code]]
       data['အမျိုးအစား'] = CITIZENSHIP_TYPE[processed_nrc[:citizenship_type]]
@@ -53,11 +54,11 @@ class DataMap
       translation_data << [data['စဉ်'],data['တိုင်း/ပြည်နယ်Code'],data['မြို့နယ်Code'],data['အမျိုးအစား'],data['မှတ်ပုံတင်အမှတ်'],data['ကျား/မ'],data['အမည်'],data['ဖုန်းနံပါတ်(၁)'],data['ဖုန်းနံပါတ်(၂)']]
     end
 
-      Methods.print_summary('data_map.rb.rb', "BATCH##{page_offset}", result_set.count)
+      Methods.print_summary('data_map.rb.rb', "data##{page_offset}", result_set.count)
 
-      ProcessCsv.create("non_nrc/Batch#{(page_offset/PER_PAGE).to_i}.xlsx", old_nrc_headers, old_nrc)
-      ProcessCsv.create("nrc/Batch#{(page_offset/PER_PAGE).to_i}.xlsx", translation_data_headers, translation_data)
-      ProcessCsv.create("missing_words/Batch#{(page_offset/PER_PAGE).to_i}.xlsx", missing_words_headers, missing_words)
+      ProcessCsv.create("non_nrc/data#{(page_offset/PER_PAGE).to_i}.xlsx", old_nrc_headers, old_nrc)
+      ProcessCsv.create("nrc/data#{(page_offset/PER_PAGE).to_i}.xlsx", translation_data_headers, translation_data)
+      ProcessCsv.create("missing_words/data#{(page_offset/PER_PAGE).to_i}.xlsx", missing_words_headers, missing_words)
 
     end
     connection.close if connection
@@ -79,11 +80,11 @@ class DataMap
         connection.exec("INSERT INTO missing_words (english)
           VALUES ('#{sql_sanitize(name_part.strip)}');")
         missing_words << [sql_sanitize(name_part.strip)]
-        sql_sanitize(name_part.strip)
+        return name_array.join(' ')
       else
         result[0]['burmese']
       end
     end
-    result_array.join(' ')
+    result_array.join('')
   end
 end
