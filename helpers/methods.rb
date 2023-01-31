@@ -4,6 +4,7 @@ class Methods
 
 
   def self.process_nrc(nrc)
+    return nrc if nrc.nil?
     splited_nrc = nrc.split('/')
 
     return nil if splited_nrc.length < 2
