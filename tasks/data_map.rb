@@ -74,7 +74,7 @@ class DataMap
     result_array = name_array.map do |name_part|
       result = connection.exec("SELECT *
                                 FROM dictionaries
-                                WHERE dictionaries.english = '#{sql_sanitize(name_part)}'
+                                WHERE LOWER(dictionaries.english) = '#{sql_sanitize(name_part).downcase}'
                                 limit 1;")
       if result.count == 0
         connection.exec("INSERT INTO missing_words (english)
