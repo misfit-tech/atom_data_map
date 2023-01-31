@@ -21,7 +21,7 @@ class DataMap
 
     Methods.print_log('data_map.rb.rb', "Start page processing batch: start with #{page_offset} and size #{resultSet.count}")
 
-    translation_data_headers = %w[စဉ် တိုင်း/ပြည်နယ်Code မြို့နယ်Code အမျိုးအစား မှတ်ပုံတင်အမှတ် ကျား/မ အမည် ဖုန်းနံပါတ်]
+    translation_data_headers = %w[စဉ် တိုင်း/ပြည်နယ်Code မြို့နယ်Code အမျိုးအစား မှတ်ပုံတင်အမှတ် ကျား/မ အမည် ဖုန်းနံပါတ်(၁) ဖုန်းနံပါတ်(၂)]
     old_nrc_headers = ["nrc"]
     missing_words_headers = ["name"]
 
@@ -41,16 +41,17 @@ class DataMap
         next
       end
 
-      data['စဉ်'] =  page_offset + serial_no
+      data['စဉ်'] =  Methods.number_map(page_offset + serial_no)
       data['တိုင်း/ပြည်နယ်Code'] = REGION_CODE[processed_nrc[:region_code]]
       data['မြို့နယ်Code'] = TOWN_SHIP_CODE[processed_nrc[:town_ship_code]]
       data['အမျိုးအစား'] = CITIZENSHIP_TYPE[processed_nrc[:citizenship_type]]
       data['မှတ်ပုံတင်အမှတ်'] = Methods.number_map(processed_nrc[:nrc_number])
       data['ကျား/မ'] = Methods.gender_prefix(row['name'])
-      data['အမည်'] = translate_to_burmese(row['name'], missing_words, connection)
-      data['ဖုန်းနံပါတ်'] = Methods.process_msisdn(row['msisdn'])
+      data['အမည်'] = translate_to_burmese(Methods.remove_prefix_from_name(row['name']), missing_words, connection)
+      data['ဖုန်းနံပါတ်(၁)'] = row['msisdn']
+      data['ဖုန်းနံပါတ်(၂)'] = ''
 
-      translation_data << [data['စဉ်'],data['တိုင်း/ပြည်နယ်Code'],data['မြို့နယ်Code'],data['အမျိုးအစား'],data['မှတ်ပုံတင်အမှတ်'],data['ကျား/မ'],data['အမည်'],data['ဖုန်းနံပါတ်'] ]
+      translation_data << [data['စဉ်'],data['တိုင်း/ပြည်နယ်Code'],data['မြို့နယ်Code'],data['အမျိုးအစား'],data['မှတ်ပုံတင်အမှတ်'],data['ကျား/မ'],data['အမည်'],data['ဖုန်းနံပါတ်(၁)'],data['ဖုန်းနံပါတ်(၂)']]
     end
 
       Methods.print_summary('data_map.rb.rb', "BATCH##{page_offset}", resultSet.count)

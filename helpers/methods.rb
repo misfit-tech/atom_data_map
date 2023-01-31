@@ -28,7 +28,7 @@ class Methods
 
 
   def self.number_map(english_number)
-    burmese_word = english_number.length&.times.map do |number|
+    burmese_word = english_number.to_s.length&.times.map do |number|
       BURMESE_NUMBER[number]
     end
     burmese_word.join(',').gsub(/[\s,]/ ,"")
@@ -37,6 +37,11 @@ class Methods
 
   def self.gender_prefix(name)
     GENDER_PREFIX[name.split(' ')[0]]
+  end
+
+  def self.remove_prefix_from_name(name)
+    name_without_prefix = name.split(' ') - [name.split(' ')[0]]
+    name_without_prefix.join(' ')
   end
 
   def self.process_msisdn(msisdn)
