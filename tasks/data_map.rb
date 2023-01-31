@@ -29,7 +29,7 @@ class DataMap
     old_nrc = []
     missing_words = []
 
-    result_set.each_with_index do |row, serial_no|
+    result_set.each.with_index(1) do |row, serial_no|
       data = Hash.new
       processed_nrc = Methods.process_nrc(row['nrc'])
 
