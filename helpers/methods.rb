@@ -134,13 +134,7 @@ class Methods
   end
 
   def self.print_summary(file, batch, total)
-    puts "[SUMMARY] :: [#{Time.now}] :: #{file} :: ----------------------------------------------------"
-    puts "[SUMMARY] :: [#{Time.now}] :: #{file} :: ****************************************************"
-    puts "[SUMMARY] :: [#{Time.now}] :: #{file} :: ----------------------------------------------------"
     puts "[SUMMARY] :: [#{Time.now}] :: #{file} :: Printing summary report for #{batch}"
     puts "[SUMMARY] :: [#{Time.now}] :: #{file} :: Total fetched #{total}"
-    puts "[SUMMARY] :: [#{Time.now}] :: #{file} :: ----------------------------------------------------"
-    puts "[SUMMARY] :: [#{Time.now}] :: #{file} :: ****************************************************"
-    puts "[SUMMARY] :: [#{Time.now}] :: #{file} :: ----------------------------------------------------"
   end
 end
