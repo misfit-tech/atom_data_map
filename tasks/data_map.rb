@@ -56,9 +56,9 @@ class DataMap
 
       Methods.print_summary('data_map.rb.rb', "data##{page_offset}", result_set.count)
 
-      ProcessCsv.create("non_nrc/data#{(page_offset/PER_PAGE).to_i}.xlsx", old_nrc_headers, old_nrc)
-      ProcessCsv.create("nrc/data#{(page_offset/PER_PAGE).to_i}.xlsx", translation_data_headers, translation_data)
-      ProcessCsv.create("missing_words/data#{(page_offset/PER_PAGE).to_i}.xlsx", missing_words_headers, missing_words)
+      ProcessCsv.create("non_nrc/Data#{(page_offset/PER_PAGE).to_i}.xlsx", old_nrc_headers, old_nrc)
+      ProcessCsv.create("nrc/Data#{(page_offset/PER_PAGE).to_i}.xlsx", translation_data_headers, translation_data)
+      ProcessCsv.create("missing_words/Data#{(page_offset/PER_PAGE).to_i}.xlsx", missing_words_headers, missing_words)
 
     end
     connection.close if connection
@@ -80,7 +80,7 @@ class DataMap
         connection.exec("INSERT INTO missing_words (english)
           VALUES ('#{sql_sanitize(name_part.strip)}');")
         missing_words << [sql_sanitize(name_part.strip)]
-        return name_array.join(' ')
+        return name.strip
       else
         result[0]['burmese']
       end
