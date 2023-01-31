@@ -19,7 +19,7 @@ class ImportDictionary
             VALUES ('#{sql_sanitize(data['english'].strip)}','#{sql_sanitize(data['burmese'].strip)}');")
           puts "english : #{sql_sanitize(data['english'])} | burmese: #{sql_sanitize(data['burmese'])} | ACTION: Insert"
         else
-          connection.exec("UPDATE dictionaries SET burmese = '#{data['burmese']}'
+          connection.exec("UPDATE dictionaries SET burmese = '#{sql_sanitize(data['burmese'].strip)}'
             WHERE english = '#{sql_sanitize(result[0]['english'].strip)}';")
           puts "english : #{sql_sanitize(data['english'])} | burmese: #{sql_sanitize(data['burmese'])} | ACTION: Update"
         end
