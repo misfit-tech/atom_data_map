@@ -75,8 +75,15 @@ class DataMap
                                 WHERE LOWER(dictionaries.english) = '#{sql_sanitize(name_part.strip).downcase}'
                                 limit 1;")
       if result.count == 0
-        connection.exec("INSERT INTO missing_words (english)
+        missing_word_result = connection.exec("SELECT *
+                                FROM missing_words
+                                WHERE LOWER(missing_words.english) = '#{sql_sanitize(name_part.strip).downcase}'
+                                limit 1;")
+
+        if missing_word_result.count == 0
+          connection.exec("INSERT INTO missing_words (english)
           VALUES ('#{sql_sanitize(name_part.strip)}');")
+        end
         missing_words << [sql_sanitize(name_part.strip)]
         return name.strip
       else
