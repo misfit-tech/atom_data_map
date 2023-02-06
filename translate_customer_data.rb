@@ -5,7 +5,7 @@ require_relative 'helpers/methods'
 begin
   threads = []
   NUMBER_OF_THREADS.times do |index|
-    per_thread = (LIMIT - OFFSET) / NUMBER_OF_THREADS
+    per_thread = LIMIT / NUMBER_OF_THREADS
     start = OFFSET + index * per_thread
     threads << Thread.new do
       DataMap.call(start, start+per_thread)
