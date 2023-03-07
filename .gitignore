@@ -1,3 +1,4 @@
 .idea/
 csv_directories/*
 logs/*
+.DS_Store
